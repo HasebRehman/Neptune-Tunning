@@ -1,0 +1,1206 @@
+<!-- =========================================================================
+     NEPTUNE TOWING - STORE LOCATOR & LIVE COVERAGE MAP WIDGET
+     Compatible with:
+       1. Standalone HTML (Local site / index.html)
+       2. WordPress Elementor HTML Widget (Simply copy & paste all code below)
+       3. WordPress Custom HTML Block (Gutenberg)
+     ========================================================================= -->
+
+<div class="neptune-locator-wrapper" id="neptune-locator-widget">
+  <!-- Stylesheet Dependencies -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    /* Scoped Styles for Neptune Store Locator */
+    .neptune-locator-wrapper {
+      --nt-red: #C4342F;
+      --nt-red-hover: #E2524C;
+      --nt-dark: #141314;
+      --nt-surface: #1B1A1B;
+      --nt-card: #232123;
+      --nt-card-hover: #2B282A;
+      --nt-input: #262426;
+      --nt-border: rgba(255, 255, 255, 0.1);
+      --nt-text: #FFFFFF;
+      --nt-muted: #9E9B9E;
+      --nt-green: #22C55E;
+      font-family: 'Barlow', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--nt-text);
+      background: var(--nt-dark);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+      margin: 24px auto;
+      max-width: 1300px;
+      width: 100%;
+      border: 1px solid var(--nt-border);
+      box-sizing: border-box;
+    }
+
+    .neptune-locator-wrapper * {
+      box-sizing: border-box;
+    }
+
+    /* Top Brand Bar */
+    .nt-loc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: var(--nt-surface);
+      border-bottom: 1px solid var(--nt-border);
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .nt-loc-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nt-loc-brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--nt-red), #8B1A16);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 14px rgba(196, 52, 47, 0.35);
+    }
+
+    .nt-loc-brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+      line-height: 1.2;
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .nt-loc-brand-sub {
+      font-size: 0.78rem;
+      color: var(--nt-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .nt-loc-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nt-loc-stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: var(--nt-card);
+      border: 1px solid var(--nt-border);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: #E2E8F0;
+      font-weight: 600;
+    }
+
+    .nt-loc-stat-pill i {
+      color: var(--nt-red);
+    }
+
+    .nt-loc-emergency-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: linear-gradient(135deg, var(--nt-red), #9E1C18);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(196, 52, 47, 0.4);
+      border: none;
+      cursor: pointer;
+    }
+
+    .nt-loc-emergency-btn:hover {
+      background: linear-gradient(135deg, var(--nt-red-hover), var(--nt-red));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(196, 52, 47, 0.6);
+      color: #fff;
+    }
+
+    .nt-pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      animation: ntPulse 1.5s infinite;
+    }
+
+    @keyframes ntPulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+    }
+
+    /* Main Grid: Sidebar + Map */
+    .nt-loc-body {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      height: 640px;
+      position: relative;
+    }
+
+    @media (max-width: 960px) {
+      .nt-loc-body {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+    }
+
+    /* Sidebar */
+    .nt-loc-sidebar {
+      background: var(--nt-surface);
+      border-right: 1px solid var(--nt-border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    @media (max-width: 960px) {
+      .nt-loc-sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--nt-border);
+        height: 480px;
+      }
+    }
+
+    .nt-loc-search-box {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--nt-border);
+      background: var(--nt-surface);
+    }
+
+    .nt-loc-input-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .nt-loc-search-input {
+      width: 100%;
+      padding: 12px 42px 12px 38px;
+      background: var(--nt-input);
+      border: 1px solid var(--nt-border);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .nt-loc-search-input:focus {
+      border-color: var(--nt-red);
+      box-shadow: 0 0 0 2px rgba(196, 52, 47, 0.2);
+    }
+
+    .nt-loc-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--nt-muted);
+      font-size: 0.88rem;
+    }
+
+    .nt-loc-gps-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      background: var(--nt-card);
+      border: 1px solid var(--nt-border);
+      border-radius: 6px;
+      color: var(--nt-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nt-loc-gps-btn:hover {
+      background: var(--nt-red);
+      color: #fff;
+      border-color: var(--nt-red);
+    }
+
+    /* Category Filter Pills */
+    .nt-loc-filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .nt-filter-pill {
+      padding: 6px 12px;
+      background: var(--nt-card);
+      border: 1px solid var(--nt-border);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--nt-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .nt-filter-pill:hover,
+    .nt-filter-pill.active {
+      background: rgba(196, 52, 47, 0.2);
+      border-color: var(--nt-red);
+      color: #fff;
+    }
+
+    .nt-filter-pill.active {
+      background: var(--nt-red);
+    }
+
+    /* Distance & Sort Row */
+    .nt-loc-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .nt-loc-select {
+      background: var(--nt-card);
+      border: 1px solid var(--nt-border);
+      border-radius: 6px;
+      color: var(--nt-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 10px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .nt-loc-select:focus {
+      border-color: var(--nt-red);
+    }
+
+    .nt-loc-count-label {
+      font-size: 0.75rem;
+      color: var(--nt-muted);
+    }
+
+    .nt-loc-count-label strong {
+      color: #fff;
+    }
+
+    /* Location Cards List */
+    .nt-loc-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .nt-loc-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .nt-loc-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+
+    .nt-loc-card {
+      background: var(--nt-card);
+      border: 1px solid var(--nt-border);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .nt-loc-card:hover {
+      background: var(--nt-card-hover);
+      border-color: rgba(196, 52, 47, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .nt-loc-card.active {
+      border-color: var(--nt-red);
+      background: rgba(196, 52, 47, 0.08);
+      box-shadow: 0 4px 18px rgba(196, 52, 47, 0.25);
+    }
+
+    .nt-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .nt-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .nt-card-dist {
+      font-size: 0.74rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: #E2E8F0;
+      white-space: nowrap;
+    }
+
+    .nt-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nt-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--nt-green);
+    }
+
+    .nt-status-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--nt-green);
+      border-radius: 50%;
+      animation: ntPulse 1.8s infinite;
+    }
+
+    .nt-eta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(196, 52, 47, 0.15);
+      border: 1px solid rgba(196, 52, 47, 0.3);
+      color: #FF8F8C;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .nt-rating {
+      font-size: 0.72rem;
+      color: #FBBF24;
+      font-weight: 600;
+    }
+
+    .nt-rating-count {
+      color: var(--nt-muted);
+      font-weight: 400;
+    }
+
+    .nt-card-info {
+      font-size: 0.8rem;
+      color: var(--nt-muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nt-card-info i {
+      color: var(--nt-red);
+      width: 14px;
+      text-align: center;
+    }
+
+    .nt-card-info a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .nt-card-info a:hover {
+      color: #fff;
+    }
+
+    .nt-card-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin: 10px 0 12px;
+    }
+
+    .nt-tag-chip {
+      font-size: 0.68rem;
+      padding: 2px 7px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      color: #CBD5E1;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .nt-card-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nt-btn-call {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: var(--nt-red);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+
+    .nt-btn-call:hover {
+      background: var(--nt-red-hover);
+      color: #fff;
+    }
+
+    .nt-btn-dir {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: transparent;
+      border: 1px solid var(--nt-border);
+      color: #CBD5E1;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .nt-btn-dir:hover {
+      border-color: #fff;
+      color: #fff;
+    }
+
+    /* Map Container */
+    .nt-loc-map-container {
+      position: relative;
+      height: 100%;
+      min-height: 400px;
+      background: #111;
+    }
+
+    #rtsl-interactive-map {
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Layer Switcher Controls */
+    .nt-map-layers {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 999;
+      display: flex;
+      gap: 4px;
+      background: rgba(20, 19, 20, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--nt-border);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .nt-layer-btn {
+      padding: 6px 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--nt-muted);
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .nt-layer-btn:hover,
+    .nt-layer-btn.active {
+      background: var(--nt-red);
+      color: #fff;
+    }
+
+    /* Custom Leaflet Marker & Popup Styling */
+    .nt-map-pin {
+      width: 36px;
+      height: 36px;
+      background: var(--nt-red);
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(196, 52, 47, 0.6);
+      border: 2px solid #fff;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .nt-map-pin:hover {
+      transform: rotate(-45deg) scale(1.15);
+    }
+
+    .nt-map-pin i {
+      transform: rotate(45deg);
+      color: #fff;
+      font-size: 15px;
+    }
+
+    .leaflet-popup-content-wrapper {
+      background: var(--nt-card) !important;
+      color: #fff !important;
+      border-radius: 10px !important;
+      border: 1px solid var(--nt-border) !important;
+      padding: 4px !important;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7) !important;
+    }
+
+    .leaflet-popup-tip {
+      background: var(--nt-card) !important;
+      border: 1px solid var(--nt-border) !important;
+    }
+
+    .nt-popup-box h4 {
+      margin: 0 0 4px;
+      font-size: 0.95rem;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .nt-popup-box p {
+      margin: 0 0 8px;
+      font-size: 0.75rem;
+      color: var(--nt-muted);
+    }
+
+    .nt-popup-box .nt-popup-btn {
+      display: block;
+      text-align: center;
+      background: var(--nt-red);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-decoration: none;
+      margin-top: 6px;
+    }
+  </style>
+
+  <!-- Top Header -->
+  <header class="nt-loc-header">
+    <div class="nt-loc-brand">
+      <div class="nt-loc-brand-icon">
+        <i class="fa-solid fa-truck-pickup"></i>
+      </div>
+      <div>
+        <h3 class="nt-loc-brand-title">Neptune Towing Locations</h3>
+        <div class="nt-loc-brand-sub">24/7 Towing &amp; Roadside Assistance</div>
+      </div>
+    </div>
+    <div class="nt-loc-header-actions">
+      <div class="nt-loc-stat-pill">
+        <i class="fa-solid fa-location-dot"></i>
+        <span><strong id="nt-active-count">7</strong> Locations Active</span>
+      </div>
+      <a href="tel:9183780584" class="nt-loc-emergency-btn">
+        <span class="nt-pulse-dot"></span>
+        <span>Emergency Tow</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Split Body -->
+  <div class="nt-loc-body">
+    <!-- Sidebar -->
+    <aside class="nt-loc-sidebar">
+      <div class="nt-loc-search-box">
+        <div class="nt-loc-input-wrap">
+          <i class="fa-solid fa-magnifying-glass nt-loc-search-icon"></i>
+          <input type="text" id="nt-search-input" class="nt-loc-search-input" placeholder="Search by city or zip code (e.g. Tulsa, Jenks, 74011)..." autocomplete="off" />
+          <button type="button" class="nt-loc-gps-btn" id="nt-gps-btn" title="Use my current GPS location">
+            <i class="fa-solid fa-crosshairs"></i>
+          </button>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="nt-loc-filters">
+          <button type="button" class="nt-filter-pill active" data-category="all">
+            <i class="fa-solid fa-table-cells-large"></i> All
+          </button>
+          <button type="button" class="nt-filter-pill" data-category="towing">
+            <i class="fa-solid fa-truck-pickup"></i> Towing
+          </button>
+          <button type="button" class="nt-filter-pill" data-category="roadside">
+            <i class="fa-solid fa-wrench"></i> Roadside
+          </button>
+          <button type="button" class="nt-filter-pill" data-category="recovery">
+            <i class="fa-solid fa-shield-halved"></i> Recovery
+          </button>
+        </div>
+
+        <!-- Controls: Distance & Sort -->
+        <div class="nt-loc-controls-row">
+          <select id="nt-distance-select" class="nt-loc-select">
+            <option value="all">Any Distance</option>
+            <option value="5">Within 5 miles</option>
+            <option value="10">Within 10 miles</option>
+            <option value="20">Within 20 miles</option>
+          </select>
+          <select id="nt-sort-select" class="nt-loc-select">
+            <option value="distance">Nearest First</option>
+            <option value="rating">Highest Rated</option>
+            <option value="name">Name (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Location Cards List -->
+      <div class="nt-loc-list" id="nt-cards-list">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </aside>
+
+    <!-- Map Container -->
+    <div class="nt-loc-map-container">
+      <div class="nt-map-layers">
+        <button type="button" class="nt-layer-btn active" data-layer="dark">
+          <i class="fa-solid fa-moon"></i> Dark
+        </button>
+        <button type="button" class="nt-layer-btn" data-layer="streets">
+          <i class="fa-solid fa-road"></i> Streets
+        </button>
+        <button type="button" class="nt-layer-btn" data-layer="satellite">
+          <i class="fa-solid fa-satellite"></i> Satellite
+        </button>
+      </div>
+      <div id="rtsl-interactive-map"></div>
+    </div>
+  </div>
+
+  <!-- Interactive JavaScript -->
+  <script>
+    (function () {
+      // 7 Neptune Towing Verified Locations Data
+      var LOCATIONS = [
+        {
+          id: 2056,
+          name: "Neptune Towing – Tulsa (Main HQ)",
+          address: "1310 E 58th St, Tulsa, OK 74105",
+          lat: 36.0984,
+          lng: -95.9472,
+          phone: "(539) 292-3074",
+          status: "open",
+          hours: "24/7",
+          eta: "8 min",
+          rating: 4.8,
+          reviews: "140+",
+          distance: 2.5,
+          services: ["towing", "roadside", "recovery"],
+          tags: ["24/7", "Flatbed", "Heavy Duty", "Long Distance", "Equipment Hauling"]
+        },
+        {
+          id: 2059,
+          name: "Neptune Towing – Jenks",
+          address: "Jenks, OK 74037",
+          lat: 36.0237,
+          lng: -95.9680,
+          phone: "(539) 292-3074",
+          status: "open",
+          hours: "24/7",
+          eta: "15 min",
+          rating: 4.5,
+          reviews: "85+",
+          distance: 8.5,
+          services: ["towing", "roadside", "recovery"],
+          tags: ["24/7", "Flatbed", "Emergency", "Lockout"]
+        },
+        {
+          id: 2057,
+          name: "Neptune Towing – Bixby",
+          address: "Bixby, OK 74008",
+          lat: 35.9417,
+          lng: -95.8817,
+          phone: "(539) 292-3074",
+          status: "open",
+          hours: "24/7",
+          eta: "18 min",
+          rating: 4.5,
+          reviews: "60+",
+          distance: 11.8,
+          services: ["towing", "roadside", "recovery"],
+          tags: ["24/7", "Flatbed", "Emergency", "Fuel Delivery"]
+        },
+        {
+          id: 2058,
+          name: "Neptune Towing – Broken Arrow",
+          address: "Broken Arrow, OK 74011",
+          lat: 36.0526,
+          lng: -95.7908,
+          phone: "(539) 292-3074",
+          status: "open",
+          hours: "24/7",
+          eta: "20 min",
+          rating: 4.6,
+          reviews: "110+",
+          distance: 12.5,
+          services: ["towing", "roadside", "recovery"],
+          tags: ["24/7", "Flatbed", "Motorcycle", "Battery Jump"]
+        },
+        {
+          id: 2062,
+          name: "Neptune Towing – Sand Springs",
+          address: "Sand Springs, OK 74063",
+          lat: 36.1400,
+          lng: -96.1092,
+          phone: "(539) 292-3074",
+          status: "open",
+          hours: "24/7",
+          eta: "18 min",
+          rating: 4.5,
+          reviews: "75+",
+          distance: 9.5,
+          services: ["towing", "roadside", "recovery"],
+          tags: ["24/7", "Flatbed", "Emergency", "Fuel Delivery"]
+        },
+        {
+          id: 2060,
+          name: "Neptune Towing – Owasso",
+          address: "Owasso, OK 74055",
+          lat: 36.2695,
+          lng: -95.8547,
+          phone: "(539) 292-3074",
+          status: "open",
+          hours: "24/7",
+          eta: "22 min",
+          rating: 4.4,
+          reviews: "50+",
+          distance: 13.0,
+          services: ["towing", "roadside"],
+          tags: ["24/7", "Flatbed", "Emergency", "Tire Change"]
+        },
+        {
+          id: 2061,
+          name: "Neptune Towing – Sapulpa",
+          address: "Sapulpa, OK 74066",
+          lat: 35.9984,
+          lng: -96.1145,
+          phone: "(539) 292-3074",
+          status: "open",
+          hours: "24/7",
+          eta: "22 min",
+          rating: 4.4,
+          reviews: "45+",
+          distance: 14.0,
+          services: ["towing", "roadside", "recovery"],
+          tags: ["24/7", "Flatbed", "Winch Out", "Recovery"]
+        }
+      ];
+
+      var mapInstance = null;
+      var markersLayer = null;
+      var currentTileLayer = null;
+      var activeLocationId = 2056;
+      var activeCategory = 'all';
+      var userCoordinates = null;
+
+      // Watermark-Free & API-Key-Free Tile Layer Generator
+      function createTileLayer(styleName) {
+        if (styleName === 'dark') {
+          return L.layerGroup([
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+              maxNativeZoom: 16,
+              maxZoom: 19,
+              attribution: '&copy; Esri &copy; OpenStreetMap'
+            }),
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+              maxNativeZoom: 16,
+              maxZoom: 19,
+              pane: 'tilePane'
+            })
+          ]);
+        } else if (styleName === 'streets') {
+          return L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+            maxNativeZoom: 18,
+            maxZoom: 19,
+            attribution: '&copy; Esri &mdash; Sources: Esri, DeLorme, NAVTEQ, USGS, TomTom'
+          });
+        } else if (styleName === 'satellite') {
+          return L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19,
+            attribution: '&copy; Esri, Maxar, Earthstar Geographics'
+          });
+        }
+        return null;
+      }
+
+      // Haversine Distance Calculator
+      function calcDistance(lat1, lon1, lat2, lon2) {
+        var R = 3958.8; // Radius of the Earth in miles
+        var dLat = (lat2 - lat1) * Math.PI / 180;
+        var dLon = (lon2 - lon1) * Math.PI / 180;
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return Math.round((R * c) * 10) / 10;
+      }
+
+      function loadLeaflet(callback) {
+        if (typeof L !== 'undefined') {
+          callback();
+          return;
+        }
+        var script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+        script.onload = callback;
+        document.head.appendChild(script);
+      }
+
+      function initStoreLocator() {
+        var mapContainer = document.getElementById('rtsl-interactive-map');
+        if (!mapContainer || mapContainer._leaflet_id) return;
+
+        // Init Map
+        mapInstance = L.map('rtsl-interactive-map', {
+          center: [36.10, -95.95],
+          zoom: 11,
+          zoomControl: true
+        });
+
+        // Set default dark tile (Clean, 100% free, zero watermarks)
+        currentTileLayer = createTileLayer('dark').addTo(mapInstance);
+        markersLayer = L.layerGroup().addTo(mapInstance);
+
+        // Render Cards & Markers
+        renderCardsAndMarkers();
+
+        // Bind Events
+        bindControls();
+      }
+
+      function renderCardsAndMarkers() {
+        var query = (document.getElementById('nt-search-input').value || '').trim().toLowerCase();
+        var maxDist = document.getElementById('nt-distance-select').value;
+        var sortBy = document.getElementById('nt-sort-select').value;
+        var cardsList = document.getElementById('nt-cards-list');
+        var countEl = document.getElementById('nt-active-count');
+
+        // Filter
+        var filtered = LOCATIONS.filter(function (loc) {
+          // Category
+          if (activeCategory !== 'all' && !loc.services.includes(activeCategory)) {
+            return false;
+          }
+          // Query
+          if (query) {
+            var matchName = loc.name.toLowerCase().includes(query);
+            var matchAddr = loc.address.toLowerCase().includes(query);
+            var matchTags = loc.tags.some(function (t) { return t.toLowerCase().includes(query); });
+            if (!matchName && !matchAddr && !matchTags) return false;
+          }
+          // Distance
+          if (maxDist !== 'all') {
+            var limit = parseFloat(maxDist);
+            if (loc.distance > limit) return false;
+          }
+          return true;
+        });
+
+        // Sort
+        filtered.sort(function (a, b) {
+          if (sortBy === 'distance') return a.distance - b.distance;
+          if (sortBy === 'rating') return b.rating - a.rating;
+          if (sortBy === 'name') return a.name.localeCompare(b.name);
+          return 0;
+        });
+
+        if (countEl) countEl.textContent = filtered.length;
+
+        // Clear Map Markers
+        if (markersLayer) markersLayer.clearLayers();
+
+        // Build HTML
+        if (filtered.length === 0) {
+          cardsList.innerHTML = '<div style="padding: 30px 10px; text-align: center; color: #9E9B9E;">' +
+            '<i class="fa-solid fa-location-slash" style="font-size: 2rem; margin-bottom: 10px; display:block;"></i>' +
+            '<p style="margin: 0; font-size: 0.88rem;">No locations match your current filters.</p>' +
+            '<button type="button" id="nt-reset-btn" style="margin-top: 12px; background: transparent; border: 1px solid var(--nt-red); color: var(--nt-red); padding: 6px 14px; border-radius: 6px; cursor: pointer;">Reset Filters</button>' +
+            '</div>';
+          var resetBtn = document.getElementById('nt-reset-btn');
+          if (resetBtn) resetBtn.onclick = function() {
+            document.getElementById('nt-search-input').value = '';
+            document.getElementById('nt-distance-select').value = 'all';
+            activeCategory = 'all';
+            document.querySelectorAll('.nt-filter-pill').forEach(function(p){ p.classList.toggle('active', p.dataset.category === 'all'); });
+            renderCardsAndMarkers();
+          };
+          return;
+        }
+
+        var html = '';
+        var bounds = [];
+
+        filtered.forEach(function (loc) {
+          var isActive = loc.id === activeLocationId;
+          bounds.push([loc.lat, loc.lng]);
+
+          // Create Custom Map Pin
+          var pinIcon = L.divIcon({
+            className: 'nt-custom-marker',
+            html: '<div class="nt-map-pin" data-id="' + loc.id + '"><i class="fa-solid fa-truck-pickup"></i></div>',
+            iconSize: [36, 36],
+            iconAnchor: [18, 36],
+            popupAnchor: [0, -32]
+          });
+
+          var marker = L.marker([loc.lat, loc.lng], { icon: pinIcon }).addTo(markersLayer);
+
+          var popupContent = '<div class="nt-popup-box">' +
+            '<h4>' + loc.name + '</h4>' +
+            '<p><i class="fa-solid fa-location-dot" style="color:var(--nt-red); margin-right:4px;"></i>' + loc.address + '</p>' +
+            '<p><i class="fa-solid fa-bolt" style="color:#FF8F8C; margin-right:4px;"></i>Est. Arrival: <strong>' + loc.eta + '</strong></p>' +
+            '<a href="tel:' + loc.phone.replace(/[^0-9]/g, '') + '" class="nt-popup-btn"><i class="fa-solid fa-phone"></i> Call ' + loc.phone + '</a>' +
+            '<a href="https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(loc.address) + '" target="_blank" style="display:block; text-align:center; font-size:0.75rem; color:#9E9B9E; margin-top:6px; text-decoration:none;"><i class="fa-solid fa-diamond-turn-right"></i> Directions</a>' +
+            '</div>';
+
+          marker.bindPopup(popupContent);
+
+          marker.on('click', function () {
+            selectLocation(loc.id, false);
+          });
+
+          // Card Item HTML
+          var tagsHtml = loc.tags.map(function(t) { return '<span class="nt-tag-chip">' + t + '</span>'; }).join('');
+          var dirUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(loc.address);
+
+          html += '<div class="nt-loc-card ' + (isActive ? 'active' : '') + '" data-id="' + loc.id + '">' +
+            '<div class="nt-card-header">' +
+              '<h4 class="nt-card-title">' + loc.name + '</h4>' +
+              '<span class="nt-card-dist">' + loc.distance + ' mi</span>' +
+            '</div>' +
+            '<div class="nt-card-meta">' +
+              '<span class="nt-status-badge"><span class="nt-status-dot"></span> Open 24/7</span>' +
+              '<span class="nt-eta-badge"><i class="fa-solid fa-bolt"></i> ~' + loc.eta + '</span>' +
+              '<span class="nt-rating"><i class="fa-solid fa-star"></i> ' + loc.rating + ' <span class="nt-rating-count">(' + loc.reviews + ')</span></span>' +
+            '</div>' +
+            '<div class="nt-card-info">' +
+              '<i class="fa-solid fa-location-dot"></i> <span>' + loc.address + '</span>' +
+            '</div>' +
+            '<div class="nt-card-info">' +
+              '<i class="fa-solid fa-phone"></i> <a href="tel:' + loc.phone.replace(/[^0-9]/g, '') + '">' + loc.phone + '</a>' +
+            '</div>' +
+            '<div class="nt-card-tags">' + tagsHtml + '</div>' +
+            '<div class="nt-card-actions">' +
+              '<a href="tel:' + loc.phone.replace(/[^0-9]/g, '') + '" class="nt-btn-call"><i class="fa-solid fa-phone"></i> Call Now</a>' +
+              '<a href="' + dirUrl + '" target="_blank" class="nt-btn-dir"><i class="fa-solid fa-diamond-turn-right"></i> Directions</a>' +
+            '</div>' +
+          '</div>';
+        });
+
+        cardsList.innerHTML = html;
+
+        // Card Click Listener
+        cardsList.querySelectorAll('.nt-loc-card').forEach(function (card) {
+          card.onclick = function (e) {
+            if (e.target.closest('a')) return; // Allow direct click on Call or Directions
+            var id = parseInt(card.dataset.id, 10);
+            selectLocation(id, true);
+          };
+        });
+      }
+
+      function selectLocation(id, flyToMap) {
+        activeLocationId = id;
+
+        // Update card active class
+        var cards = document.querySelectorAll('.nt-loc-card');
+        cards.forEach(function (c) {
+          var isActive = parseInt(c.dataset.id, 10) === id;
+          c.classList.toggle('active', isActive);
+          if (isActive) {
+            c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        });
+
+        // Fly map & open popup
+        var targetLoc = LOCATIONS.find(function (l) { return l.id === id; });
+        if (targetLoc && mapInstance) {
+          if (flyToMap) {
+            mapInstance.flyTo([targetLoc.lat, targetLoc.lng], 13, { duration: 1.2 });
+          }
+          // Find marker and open popup
+          markersLayer.eachLayer(function (layer) {
+            var latLng = layer.getLatLng();
+            if (Math.abs(latLng.lat - targetLoc.lat) < 0.0001 && Math.abs(latLng.lng - targetLoc.lng) < 0.0001) {
+              layer.openPopup();
+            }
+          });
+        }
+      }
+
+      function bindControls() {
+        // Search Input
+        var searchInput = document.getElementById('nt-search-input');
+        if (searchInput) {
+          searchInput.oninput = function () {
+            renderCardsAndMarkers();
+          };
+        }
+
+        // Distance & Sort Dropdowns
+        var distSelect = document.getElementById('nt-distance-select');
+        if (distSelect) {
+          distSelect.onchange = function () {
+            renderCardsAndMarkers();
+          };
+        }
+
+        var sortSelect = document.getElementById('nt-sort-select');
+        if (sortSelect) {
+          sortSelect.onchange = function () {
+            renderCardsAndMarkers();
+          };
+        }
+
+        // Category Filter Pills
+        var filterPills = document.querySelectorAll('.nt-filter-pill');
+        filterPills.forEach(function (pill) {
+          pill.onclick = function () {
+            filterPills.forEach(function (p) { p.classList.remove('active'); });
+            pill.classList.add('active');
+            activeCategory = pill.dataset.category;
+            renderCardsAndMarkers();
+          };
+        });
+
+        // Layer Switcher
+        var layerBtns = document.querySelectorAll('.nt-layer-btn');
+        layerBtns.forEach(function (btn) {
+          btn.onclick = function () {
+            layerBtns.forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            var styleName = btn.dataset.layer;
+            if (mapInstance) {
+              if (currentTileLayer) mapInstance.removeLayer(currentTileLayer);
+              var nextLayer = createTileLayer(styleName);
+              if (nextLayer) {
+                currentTileLayer = nextLayer.addTo(mapInstance);
+              }
+            }
+          };
+        });
+
+        // GPS Geolocation Button
+        var gpsBtn = document.getElementById('nt-gps-btn');
+        if (gpsBtn) {
+          gpsBtn.onclick = function () {
+            if (!navigator.geolocation) {
+              alert('Geolocation is not supported by your browser.');
+              return;
+            }
+            gpsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            navigator.geolocation.getCurrentPosition(
+              function (pos) {
+                userCoordinates = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                gpsBtn.innerHTML = '<i class="fa-solid fa-check" style="color:var(--nt-green);"></i>';
+
+                // Recalculate distance for all locations
+                LOCATIONS.forEach(function (loc) {
+                  loc.distance = calcDistance(userCoordinates.lat, userCoordinates.lng, loc.lat, loc.lng);
+                });
+
+                // Auto-sort nearest
+                var sortSelect = document.getElementById('nt-sort-select');
+                if (sortSelect) sortSelect.value = 'distance';
+
+                // Add User Marker
+                var userIcon = L.divIcon({
+                  className: 'nt-user-marker',
+                  html: '<div style="width:16px;height:16px;background:#3B82F6;border:3px solid #fff;border-radius:50%;box-shadow:0 0 10px rgba(59,130,246,0.8);"></div>',
+                  iconSize: [16, 16]
+                });
+                L.marker([userCoordinates.lat, userCoordinates.lng], { icon: userIcon }).addTo(mapInstance).bindPopup('<strong>Your Current Location</strong>').openPopup();
+
+                renderCardsAndMarkers();
+
+                // Select closest location
+                if (LOCATIONS.length > 0) {
+                  selectLocation(LOCATIONS[0].id, true);
+                }
+              },
+              function (err) {
+                gpsBtn.innerHTML = '<i class="fa-solid fa-crosshairs"></i>';
+                alert('Could not retrieve your location. Please check browser permissions.');
+              },
+              { timeout: 10000, enableHighAccuracy: true }
+            );
+          };
+        }
+      }
+
+      // Initialize when DOM and Leaflet are ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () {
+          loadLeaflet(initStoreLocator);
+        });
+      } else {
+        loadLeaflet(initStoreLocator);
+      }
+    })();
+  </script>
+</div>
+<!-- =========================================================================
+     END NEPTUNE TOWING - STORE LOCATOR & LIVE COVERAGE MAP WIDGET
+     ========================================================================= -->
