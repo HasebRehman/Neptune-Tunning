@@ -12,10 +12,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;0,900;1,500;1,600;1,700;1,800;1,900&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
   <!-- Font Awesome 6 Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 
-  <!-- Preload Header Logo for Instant LCP Render -->
+  <!-- Preconnect for external assets -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="dns-prefetch" href="https://neptunetowingllc.com">
+
+  <!-- Preload critical above-fold assets -->
   <link rel="preload" as="image" href="https://staging.neptunetowingllc.com/wp-content/uploads/2026/10/cropped-imgi_1_cropped-Neptune-Towing.png-1.png">
+  <link rel="preload" as="image" href="IMAGES/hero-poster.jpg">
+  <link rel="preload" as="video" href="VIDEOS/IMG_8953.MOV" type="video/mp4">
 
   <style>
     /* ==========================================================================
@@ -840,9 +847,15 @@
     /* CTA Buttons — Prototype btns row */
     .hero-ctas {
       display: flex !important;
-      flex-wrap: wrap !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
       gap: 14px !important;
       margin-bottom: 40px !important;
+    }
+    .hero-ctas .hero-btn-call,
+    .hero-ctas .hero-btn-secondary {
+      width: 100% !important;
+      max-width: 280px !important;
     }
 
     .hero-btn-call,
@@ -3747,7 +3760,7 @@
        03. HERO — FULL-SCREEN VIDEO BACKGROUND
        ======================================================================== -->
   <section class="hero-section" id="hero">
-    <video class="hero-video-bg" autoplay muted loop playsinline poster="IMAGES/hero-poster.jpg">
+    <video class="hero-video-bg" autoplay muted loop playsinline preload="auto" poster="IMAGES/hero-poster.jpg">
       <source src="VIDEOS/IMG_8953.MOV" type="video/mp4">
     </video>
     <div class="hero-overlay"></div>
@@ -3803,26 +3816,26 @@
   <section class="partners-marquee-section" id="partners-bar" aria-label="Insurance and roadside assistance network partners">
     <div class="marquee-track">
       <!-- Set 1 -->
-      <div class="marquee-item"><img src="IMAGES/partner-1.png" alt="Coach-Net Roadside Assistance" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/1-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item"><img src="IMAGES/partner-2.png" alt="GEICO Towing Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/5-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item"><img src="IMAGES/partner-3.png" alt="HONK Partner Network" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/4-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item"><img src="IMAGES/partner-4.png" alt="GEICO Commercial Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/6-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item"><img src="IMAGES/partner-5.png" alt="URGENTLY Roadside Assistance" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/7-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item"><img src="IMAGES/partner-6.png" alt="Automobile Club Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/Untitled-design-3.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item"><img src="IMAGES/partner-7.png" alt="Fleet & Roadside Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/3-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item"><img src="IMAGES/partner-8.png" alt="Insurance & Roadside Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/2-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item"><img src="IMAGES/partner-9.png" alt="Certified Roadside Network" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/8-1.png'" loading="lazy" decoding="async"></div>
+      <div class="marquee-item"><img src="IMAGES/partner-1.png" alt="Coach-Net Roadside Assistance" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/1-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item"><img src="IMAGES/partner-2.png" alt="GEICO Towing Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/5-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item"><img src="IMAGES/partner-3.png" alt="HONK Partner Network" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/4-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item"><img src="IMAGES/partner-4.png" alt="GEICO Commercial Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/6-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item"><img src="IMAGES/partner-5.png" alt="URGENTLY Roadside Assistance" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/7-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item"><img src="IMAGES/partner-6.png" alt="Automobile Club Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/Untitled-design-3.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item"><img src="IMAGES/partner-7.png" alt="Fleet & Roadside Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/3-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item"><img src="IMAGES/partner-8.png" alt="Insurance & Roadside Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/2-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item"><img src="IMAGES/partner-9.png" alt="Certified Roadside Network" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/8-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
 
       <!-- Set 2 (Identical duplicate for seamless continuous loop) -->
-      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-1.png" alt="Coach-Net Roadside Assistance" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/1-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-2.png" alt="GEICO Towing Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/5-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-3.png" alt="HONK Partner Network" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/4-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-4.png" alt="GEICO Commercial Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/6-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-5.png" alt="URGENTLY Roadside Assistance" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/7-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-6.png" alt="Automobile Club Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/Untitled-design-3.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-7.png" alt="Fleet & Roadside Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/3-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-8.png" alt="Insurance & Roadside Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/2-1.png'" loading="lazy" decoding="async"></div>
-      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-9.png" alt="Certified Roadside Network" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/8-1.png'" loading="lazy" decoding="async"></div>
+      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-1.png" alt="Coach-Net Roadside Assistance" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/1-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-2.png" alt="GEICO Towing Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/5-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-3.png" alt="HONK Partner Network" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/4-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-4.png" alt="GEICO Commercial Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/6-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-5.png" alt="URGENTLY Roadside Assistance" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/7-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-6.png" alt="Automobile Club Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/Untitled-design-3.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-7.png" alt="Fleet & Roadside Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/3-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-8.png" alt="Insurance & Roadside Partner" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/2-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
+      <div class="marquee-item" aria-hidden="true"><img src="IMAGES/partner-9.png" alt="Certified Roadside Network" onerror="this.src='https://neptunetowingllc.com/wp-content/uploads/2026/02/8-1.png'" loading="eager" decoding="async" fetchpriority="high"></div>
     </div>
   </section>
 
