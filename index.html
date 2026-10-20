@@ -847,15 +847,22 @@
     /* CTA Buttons — Prototype btns row */
     .hero-ctas {
       display: flex !important;
-      flex-direction: column !important;
-      align-items: flex-start !important;
+      flex-direction: row !important;
+      flex-wrap: wrap !important;
+      align-items: center !important;
       gap: 14px !important;
       margin-bottom: 40px !important;
     }
-    .hero-ctas .hero-btn-call,
-    .hero-ctas .hero-btn-secondary {
-      width: 100% !important;
-      max-width: 280px !important;
+    @media (max-width: 480px) {
+      .hero-ctas {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+      }
+      .hero-ctas .hero-btn-call,
+      .hero-ctas .hero-btn-secondary {
+        width: 100% !important;
+        max-width: 280px !important;
+      }
     }
 
     .hero-btn-call,
