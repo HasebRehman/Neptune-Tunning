@@ -1887,6 +1887,14 @@
       }
     }
 
+    @media (min-width: 576px) and (max-width: 1024px) {
+      .pricing-inner-row { gap: 28px !important; align-items: flex-start !important; }
+      .pricing-inner-row > div:first-child { min-width: 0 !important; flex: 1 !important; }
+      .pricing-inner-row > div:last-child { flex-shrink: 0 !important; }
+      .pricing-inner-row > div:last-child > div { padding: 20px 24px !important; }
+      .pricing-inner-row > div:last-child > div div[style*="font-size"] { font-size: clamp(36px,5vw,54px) !important; }
+    }
+
     @media (max-width: 575px) {
       .pricing-full-link { display: none !important; }
       .pricing-inner-row { flex-direction: column !important; align-items: flex-start !important; gap: 28px !important; }
@@ -3800,7 +3808,7 @@
         <p class="hero-pretitle"><span class="hero-pretitle-text" id="heroPretitle">24/7 Emergency Service</span></p>
         <script>
           (function(){
-            var lines = ['24/7 Emergency Service', 'Damage Free Towing'];
+            var lines = ['24/7 Emergency Service', 'Damage-Free Towing'];
             var idx = 0;
             var el = document.getElementById('heroPretitle');
             setInterval(function(){
@@ -3995,11 +4003,16 @@
           <p style="font-family:'Segoe UI',-apple-system,sans-serif;font-size:16px;line-height:1.7;color:#5A5758;margin:0 0 28px;max-width:440px;">Your final price depends on distance and the service you need. Dispatch gives you a clear quote on the phone before any work starts.</p>
           <a href="prices.html" class="pricing-full-link" style="display:inline-flex;align-items:center;gap:8px;font-family:'Segoe UI',sans-serif;font-size:15px;font-weight:600;color:#C4342F;text-decoration:none;letter-spacing:0.01em;">See full pricing →</a>
         </div>
-        <div style="display:flex;flex-direction:column;gap:0;flex-shrink:0;">
-          <div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:3px;padding:40px 52px;text-align:center;box-shadow:0 2px 24px rgba(0,0,0,0.06);">
-            <span style="font-family:'Segoe UI',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#5A5758;display:block;margin-bottom:12px;">Starts from</span>
-            <div style="font-family:'Segoe UI',sans-serif;font-weight:700;font-size:clamp(52px,7vw,80px);line-height:1;letter-spacing:-0.03em;color:#1A1818;">$125</div>
-            <span style="font-family:'Segoe UI',sans-serif;font-size:14px;color:#5A5758;display:block;margin-top:10px;">Flat-rate, no hidden fees</span>
+        <div style="display:flex;flex-direction:row;gap:12px;flex-shrink:0;">
+          <div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:3px;padding:28px 44px;text-align:center;box-shadow:0 2px 24px rgba(0,0,0,0.06);">
+            <span style="font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#5A5758;display:block;margin-bottom:8px;">Day rate</span>
+            <div style="font-family:'Segoe UI',sans-serif;font-weight:700;font-size:clamp(44px,6vw,70px);line-height:1;letter-spacing:-0.03em;color:#1A1818;">$125</div>
+            <span style="font-family:'Segoe UI',sans-serif;font-size:13px;color:#5A5758;display:block;margin-top:8px;">Flat-rate, no hidden fees</span>
+          </div>
+          <div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:3px;padding:28px 44px;text-align:center;box-shadow:0 2px 24px rgba(0,0,0,0.06);">
+            <span style="font-family:'Segoe UI',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#5A5758;display:block;margin-bottom:8px;">Night rate</span>
+            <div style="font-family:'Segoe UI',sans-serif;font-weight:700;font-size:clamp(44px,6vw,70px);line-height:1;letter-spacing:-0.03em;color:#1A1818;">$195</div>
+            <span style="font-family:'Segoe UI',sans-serif;font-size:13px;color:#5A5758;display:block;margin-top:8px;">Flat-rate, no hidden fees</span>
           </div>
         </div>
       </div>
