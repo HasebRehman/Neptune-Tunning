@@ -1296,20 +1296,6 @@
       align-items: center !important;
       width: max-content !important;
       will-change: transform !important;
-      animation: marqueeScrollLeft 32s linear infinite !important;
-    }
-
-    .marquee-track:hover {
-      animation-play-state: paused !important;
-    }
-
-    @keyframes marqueeScrollLeft {
-      0% {
-        transform: translate3d(0, 0, 0);
-      }
-      100% {
-        transform: translate3d(-50%, 0, 0);
-      }
     }
 
     .marquee-item {
@@ -1341,11 +1327,6 @@
     @media (max-width: 768px) {
       .partners-marquee-section {
         padding: 32px 0 !important;
-      }
-      .marquee-track {
-        animation: marqueeScrollLeft 14s linear infinite !important;
-        /* never pause on touch */
-        animation-play-state: running !important;
       }
       .marquee-track:hover {
         animation-play-state: running !important;
@@ -4932,6 +4913,50 @@
     );
     window.location.href = 'sms:5392923074?body=' + msg;
   }
+  </script>
+
+  <!-- ===================== MARQUEE ===================== -->
+  <script>
+  (function(){
+    var track = document.querySelector('.marquee-track');
+    if (!track) return;
+
+    var isMobile = window.innerWidth <= 768;
+    var pxPerSec = isMobile ? 80 : 48; // pixels per second
+    var pos = 0;
+    var halfW = 0;
+    var raf;
+
+    function measure() {
+      // half the track = one set of logos
+      halfW = track.scrollWidth / 2;
+    }
+
+    function step(ts) {
+      pos += pxPerSec / 60;
+      if (pos >= halfW) pos = 0;
+      track.style.transform = 'translate3d(-' + pos + 'px, 0, 0)';
+      raf = requestAnimationFrame(step);
+    }
+
+    function start() {
+      measure();
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(step);
+    }
+
+    // Start after images load so scrollWidth is accurate
+    window.addEventListener('load', start);
+    // Fallback if load already fired
+    if (document.readyState === 'complete') start();
+
+    // Re-measure on resize
+    window.addEventListener('resize', function() {
+      isMobile = window.innerWidth <= 768;
+      pxPerSec = isMobile ? 80 : 48;
+      measure();
+    });
+  })();
   </script>
 
   <!-- ===================== PARALLAX ===================== -->
