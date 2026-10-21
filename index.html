@@ -51,7 +51,7 @@
       --nt-border-light: #E2E8F0;
       --nt-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
       --nt-shadow-lg: 0 20px 45px rgba(0, 0, 0, 0.45);
-      --font-heading: 'Barlow Condensed', sans-serif;
+      --font-heading: 'Barlow', sans-serif;
       --font-body: 'Barlow', sans-serif;
       --container-max: 1240px;
       --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -447,10 +447,10 @@
     }
 
     .brand-text b {
-      font-family: 'Barlow Condensed', sans-serif !important;
+      font-family: var(--font-body) !important;
       font-weight: 800 !important;
-      font-size: 24px !important;
-      letter-spacing: 0.04em !important;
+      font-size: 22px !important;
+      letter-spacing: 0.02em !important;
       line-height: 0.95 !important;
       display: block !important;
       color: #FFFFFF !important;
@@ -459,13 +459,13 @@
 
     .brand-text small {
       display: block !important;
-      font-family: 'Barlow Condensed', sans-serif !important;
+      font-family: var(--font-body) !important;
       font-weight: 700 !important;
-      font-size: 13px !important;
-      letter-spacing: 0.3em !important;
+      font-size: 12px !important;
+      letter-spacing: 0.25em !important;
       color: #C4342F !important;
       text-transform: uppercase !important;
-      margin-top: 2px !important;
+      margin-top: 3px !important;
     }
 
     /* Navigation Menu (Exact Image 2 Pill Style) */
@@ -537,10 +537,12 @@
       gap: 10px !important;
       background: #C4342F !important;
       color: #FFFFFF !important;
-      font-family: 'Barlow', sans-serif !important;
+      font-family: var(--font-body) !important;
       font-size: 15px !important;
       font-weight: 700 !important;
-      padding: 9px 18px !important;
+      letter-spacing: 0.08em !important;
+      text-transform: uppercase !important;
+      padding: 9px 20px !important;
       border-radius: 3px !important;
       text-decoration: none !important;
       transition: background 0.2s ease, transform 0.2s ease !important;
@@ -976,7 +978,7 @@
     }
 
     .hero-stat-number {
-      font-family: var(--font-heading, 'Barlow Condensed', sans-serif) !important;
+      font-family: var(--font-heading, 'Barlow', sans-serif) !important;
       font-weight: 800 !important;
       font-size: 32px !important;
       line-height: 1.1 !important;
@@ -1013,8 +1015,10 @@
     /* Mobile (< 576px): Stacked hero buttons & clean grid stats */
     @media (max-width: 575px) {
       .hero-section {
-        min-height: 95dvh !important;
-        min-height: 95svh !important;
+        min-height: 90dvh !important;
+        min-height: 90svh !important;
+        max-height: 90dvh !important;
+        max-height: 90svh !important;
         align-items: center !important;
         justify-content: center !important;
       }
@@ -1118,7 +1122,7 @@
       }
 
       .hero-stat-number {
-        font-family: var(--font-heading, 'Barlow Condensed', sans-serif) !important;
+        font-family: var(--font-heading, 'Barlow', sans-serif) !important;
         font-size: clamp(1.2rem, 4.5vw, 1.5rem) !important;
         font-weight: 800 !important;
         color: #FFFFFF !important;
@@ -1224,7 +1228,7 @@
       }
 
       .hero-stat-number {
-        font-family: var(--font-heading, 'Barlow Condensed', sans-serif) !important;
+        font-family: var(--font-heading, 'Barlow', sans-serif) !important;
         font-size: 28px !important;
         font-weight: 800 !important;
         color: #FFFFFF !important;
@@ -1946,7 +1950,7 @@
     .price b,
     .price-box-amount {
       display: block !important;
-      font-family: var(--font-heading, 'Barlow Condensed', sans-serif) !important;
+      font-family: var(--font-heading, 'Barlow', sans-serif) !important;
       font-weight: 800 !important;
       font-size: 60px !important;
       line-height: 1.05 !important;
@@ -2410,7 +2414,7 @@
     }
 
     .reviewer-name {
-      font-family: var(--font-heading, 'Barlow Condensed', sans-serif) !important;
+      font-family: var(--font-heading, 'Barlow', sans-serif) !important;
       font-size: 1.15rem !important;
       font-weight: 700 !important;
       color: #211F20 !important;
@@ -2604,7 +2608,7 @@
     }
 
     .about-caption-name {
-      font-family: var(--font-heading, 'Barlow Condensed', sans-serif) !important;
+      font-family: var(--font-heading, 'Barlow', sans-serif) !important;
       font-size: 1.6rem !important;
       font-weight: 800 !important;
       color: #FFFFFF !important;
@@ -2719,7 +2723,7 @@
     }
 
     .about-actions .btn {
-      font-family: var(--font-heading, 'Barlow Condensed', sans-serif) !important;
+      font-family: var(--font-heading, 'Barlow', sans-serif) !important;
       font-weight: 800 !important;
       font-size: 1.15rem !important;
       text-transform: uppercase !important;
@@ -3246,19 +3250,19 @@
       text-align: left !important;
     }
     .footer-logo-text b {
-      font-family: 'Barlow Condensed', sans-serif !important;
+      font-family: var(--font-body) !important;
       font-weight: 800 !important;
-      font-size: 36px !important;
-      letter-spacing: 0.04em !important;
+      font-size: 34px !important;
+      letter-spacing: 0.02em !important;
       line-height: 0.95 !important;
       color: #FFFFFF !important;
       text-transform: uppercase !important;
     }
     .footer-logo-text small {
-      font-family: 'Barlow Condensed', sans-serif !important;
+      font-family: var(--font-body) !important;
       font-weight: 700 !important;
-      font-size: 19px !important;
-      letter-spacing: 0.3em !important;
+      font-size: 17px !important;
+      letter-spacing: 0.25em !important;
       color: #C4342F !important;
       text-transform: uppercase !important;
       margin-top: 3px !important;
@@ -3281,7 +3285,7 @@
     }
     .footer-phone:hover { color: #e24a44 !important; }
     .footer-col-heading {
-      font-family: 'Barlow Condensed', sans-serif !important;
+      font-family: 'Barlow', sans-serif !important;
       font-size: 17px !important;
       font-weight: 700 !important;
       letter-spacing: 0.18em !important;
@@ -3507,7 +3511,7 @@
     .nav-dropdown-mega .nav-dropdown-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; }
     .nav-dropdown-col { display: flex; flex-direction: column; }
     .nav-dropdown-cat {
-      font-family: 'Barlow Condensed', sans-serif !important;
+      font-family: 'Barlow', sans-serif !important;
       font-size: 11px !important; font-weight: 700 !important;
       letter-spacing: 0.2em !important; text-transform: uppercase !important;
       color: #C4342F !important; margin: 0 0 14px !important; padding-bottom: 10px !important;
@@ -3943,7 +3947,7 @@
       <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px 24px;margin-bottom:64px;flex-wrap:wrap;">
         <div>
           <div class="eyebrow" style="color:#C4342F;font-size:13px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;display:block;margin-bottom:10px;font-family:'Barlow',sans-serif;">Our Services</div>
-          <h2 style="color:#1A1818;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(28px,4vw,48px);line-height:1.05;letter-spacing:0.02em;margin:0;">Towing and roadside, done right.</h2>
+          <h2 style="color:#1A1818;font-family:'Barlow',sans-serif;font-weight:700;text-transform:uppercase;font-size:clamp(28px,4vw,48px);line-height:1.05;letter-spacing:0.02em;margin:0;">Towing and roadside, done right.</h2>
         </div>
         <a href="services.html" style="color:#5A5758;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px;letter-spacing:0.06em;text-transform:uppercase;">All services →</a>
       </div>
