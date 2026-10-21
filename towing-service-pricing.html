@@ -1989,15 +1989,14 @@
     }
 
     .footer-brand-sub {
-      font-family: var(--font-body, 'Barlow', sans-serif) !important;
-      font-size: 0.92rem !important;
-      font-weight: 800 !important;
-      color: #C4342F !important;
-      letter-spacing: 0.92em !important;
-      margin-right: -0.92em !important;
-      line-height: 1 !important;
-      margin-top: 3px !important;
-      display: block !important;
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--nt-red);
+      letter-spacing: 6.5px;
+      text-transform: uppercase;
+      margin-top: 4px;
+      line-height: 1;
     }
 
     .footer-about-text {
@@ -3043,7 +3042,7 @@
         <div class="footer-col-brand">
           <a href="index.html" class="footer-brand-logo-wrap">
             <img src="https://staging.neptunetowingllc.com/wp-content/uploads/2026/10/cropped-imgi_1_cropped-Neptune-Towing.png-1.png" alt="Neptune Towing Logo" class="footer-brand-logo" loading="lazy" decoding="async" onerror="this.src='https://staging.neptunetowingllc.com/wp-content/uploads/2026/02/cropped-imgi_1_cropped-Neptune-Towing.png.png'">
-            <div style="display: inline-flex; flex-direction: column; align-items: stretch; line-height: 1;">
+            <div style="display: flex; flex-direction: column; line-height: 1;">
               <span class="footer-brand-title">NEPTUNE</span>
               <span class="footer-brand-sub">TOWING</span>
             </div>
@@ -3290,55 +3289,6 @@
         }
       }
     });
-  </script>
-  <!-- Match TOWING letter-spacing to NEPTUNE width exactly -->
-  <script>
-  (function () {
-    function matchWidth(bEl, sEl) {
-      if (!bEl || !sEl) return;
-      var bW = bEl.getBoundingClientRect().width;
-      if (!bW) return;
-      var temp = document.createElement('span');
-      temp.style.font = window.getComputedStyle(sEl).font;
-      temp.style.textTransform = 'uppercase';
-      temp.style.letterSpacing = 'normal';
-      temp.style.position = 'absolute';
-      temp.style.visibility = 'hidden';
-      temp.textContent = sEl.textContent.trim();
-      document.body.appendChild(temp);
-      var sW = temp.getBoundingClientRect().width;
-      document.body.removeChild(temp);
-      var chars = sEl.textContent.trim().length;
-      if (chars > 1 && bW > sW) {
-        var ls = (bW - sW) / (chars - 1);
-        sEl.style.setProperty('letter-spacing', ls.toFixed(2) + 'px', 'important');
-        sEl.style.setProperty('margin-right', (-ls).toFixed(2) + 'px', 'important');
-      }
-    }
-
-    function applyAll() {
-      document.querySelectorAll('.brand-text').forEach(function (bt) {
-        matchWidth(bt.querySelector('b'), bt.querySelector('small'));
-      });
-      document.querySelectorAll('.footer-logo-text').forEach(function (ft) {
-        matchWidth(ft.querySelector('b'), ft.querySelector('small'));
-      });
-      document.querySelectorAll('.footer-col-brand, .footer-brand-logo-wrap').forEach(function (fb) {
-        matchWidth(fb.querySelector('.footer-brand-title'), fb.querySelector('.footer-brand-sub'));
-      });
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', applyAll);
-    } else {
-      applyAll();
-    }
-    window.addEventListener('load', applyAll);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(applyAll);
-    }
-    window.addEventListener('resize', applyAll);
-  })();
   </script>
 </body>
 </html>
