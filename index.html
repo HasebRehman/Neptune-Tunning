@@ -531,6 +531,47 @@
       flex-shrink: 0 !important;
     }
 
+    .header-location-btn {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 8px !important;
+      background: rgba(255, 255, 255, 0.06) !important;
+      color: #FFFFFF !important;
+      font-family: var(--font-body) !important;
+      font-size: 14px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.06em !important;
+      text-transform: uppercase !important;
+      padding: 9px 16px !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+      border-radius: 3px !important;
+      text-decoration: none !important;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
+      white-space: nowrap !important;
+      line-height: 1 !important;
+      flex-shrink: 0 !important;
+      cursor: pointer !important;
+    }
+
+    .header-location-btn:hover {
+      background: rgba(255, 255, 255, 0.16) !important;
+      border-color: #FFFFFF !important;
+      color: #FFFFFF !important;
+      transform: translateY(-1px) !important;
+    }
+
+    .header-location-btn i {
+      font-size: 0.95rem !important;
+      color: #E2524C !important;
+      transition: transform 0.2s ease !important;
+    }
+
+    .header-location-btn:hover i {
+      transform: scale(1.15) !important;
+      color: #FF5A52 !important;
+    }
+
     .header-phone-btn {
       display: inline-flex !important;
       align-items: center !important;
@@ -611,6 +652,11 @@
         font-size: 14px !important;
         padding: 7px 8px !important;
       }
+      .header-location-btn {
+        font-size: 13px !important;
+        padding: 8px 12px !important;
+        gap: 6px !important;
+      }
       .header-phone-btn {
         font-size: 14px !important;
         padding: 8px 14px !important;
@@ -647,9 +693,46 @@
         letter-spacing: 0.91em !important;
         margin-right: -0.91em !important;
       }
+      .header-location-btn {
+        padding: 8px 10px !important;
+        font-size: 12px !important;
+        gap: 6px !important;
+      }
       .header-phone-btn {
         padding: 8px 12px !important;
         font-size: 13px !important;
+      }
+    }
+
+    .header-location-btn span.short-text {
+      display: none !important;
+    }
+    .header-location-btn span.long-text {
+      display: inline !important;
+    }
+
+    @media (max-width: 768px) {
+      .header-location-btn span.long-text {
+        display: none !important;
+      }
+      .header-location-btn span.short-text {
+        display: inline !important;
+      }
+      .header-location-btn {
+        padding: 8px 10px !important;
+        font-size: 13px !important;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .header-location-btn span.long-text,
+      .header-location-btn span.short-text {
+        display: none !important;
+      }
+      .header-location-btn {
+        padding: 8px 11px !important;
+        min-width: 36px !important;
+        height: 34px !important;
       }
     }
 
@@ -3781,6 +3864,11 @@
       </nav>
 
       <div class="header-actions">
+        <a href="#send-location" class="header-location-btn" onclick="handleSendLocation(event)" title="Send My Location" aria-label="Send My Location">
+          <i class="fa-solid fa-location-dot"></i>
+          <span class="long-text">Send My Location</span>
+          <span class="short-text">Location</span>
+        </a>
         <a href="tel:5392923074" class="header-phone-btn">
           <i class="fa-solid fa-phone"></i>
           <span>(539) 292-3074</span>
