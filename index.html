@@ -22,7 +22,7 @@
   <!-- Preload critical above-fold assets -->
   <link rel="preload" as="image" href="https://staging.neptunetowingllc.com/wp-content/uploads/2026/10/cropped-imgi_1_cropped-Neptune-Towing.png-1.png">
   <link rel="preload" as="image" href="IMAGES/hero-poster.jpg">
-  <link rel="preload" as="video" href="VIDEOS/IMG_8954.MOV" type="video/mp4">
+  <link rel="preload" as="video" href="VIDEOS/1000004321.mp4" type="video/mp4">
 
   <style>
     /* ==========================================================================
@@ -925,11 +925,30 @@
       font-size: 18px !important;
       font-weight: 400 !important;
       line-height: 1.55 !important;
-      color: rgba(255, 255, 255, 0.80) !important;
-      max-width: 46ch !important;
+      color: rgba(255, 255, 255, 0.82) !important;
+      max-width: 58ch !important;
       margin: 0 0 36px 0 !important;
       padding-left: 0 !important;
       border-left: none !important;
+    }
+
+    .hero-trust-line {
+      display: block !important;
+      font-family: var(--font-body, 'Barlow', sans-serif) !important;
+      font-size: 13.5px !important;
+      font-weight: 500 !important;
+      letter-spacing: 0.03em !important;
+      color: rgba(255, 255, 255, 0.70) !important;
+      margin: -22px 0 0 0 !important;
+      line-height: 1.5 !important;
+    }
+
+    @media (max-width: 575px) {
+      .hero-trust-line {
+        font-size: 12px !important;
+        margin: -14px 0 0 0 !important;
+        text-align: center !important;
+      }
     }
 
     /* CTA Buttons — Prototype btns row */
@@ -3894,41 +3913,22 @@
   <!-- ========================================================================
        03. HERO — FULL-SCREEN VIDEO BACKGROUND
        ======================================================================== -->
-  <section class="hero-section" id="hero">
+    <section class="hero-section" id="hero">
     <video class="hero-video-bg" autoplay muted loop playsinline preload="auto" poster="IMAGES/hero-poster.jpg">
-      <source src="VIDEOS/IMG_8954.MOV" type="video/mp4">
+      <source src="VIDEOS/1000004321.mp4" type="video/mp4">
     </video>
     <div class="hero-overlay"></div>
 
     <div class="container">
       <div class="hero-content">
-        <p class="hero-pretitle"><span class="hero-pretitle-text" id="heroPretitle">24/7 Emergency Service</span></p>
-        <script>
-          (function(){
-            var lines = ['24/7 Emergency Service', 'Damage-Free Towing'];
-            var idx = 0;
-            var el = document.getElementById('heroPretitle');
-            setInterval(function(){
-              el.classList.add('fade-out');
-              setTimeout(function(){
-                idx = (idx + 1) % lines.length;
-                el.textContent = lines[idx];
-                el.classList.remove('fade-out');
-                el.classList.add('fade-in');
-                requestAnimationFrame(function(){ requestAnimationFrame(function(){
-                  el.classList.remove('fade-in');
-                }); });
-              }, 500);
-            }, 10000);
-          })();
-        </script>
+        <p class="hero-pretitle"><span class="hero-pretitle-text">Damage-free towing since 2019</span></p>
 
         <h1 class="hero-headline">
-          <span class="line-white">TULSA&rsquo;S #1</span>
-          <span class="line-white">TOWING SERVICE</span>
+          <span class="line-white">Tulsa Flatbed Towing</span>
+          <span class="line-white">&amp; Roadside Assistance</span>
         </h1>
 
-        <p class="hero-lead">Flat-rate towing &amp; roadside assistance, 24/7.<br>We roll in 30&ndash;45 minutes, anywhere in the Tulsa metro.</p>
+        <p class="hero-lead">Light-duty towing, jump starts, lockouts and roadside help across the Tulsa metro, 24 hours a day. Call for current availability and an estimated arrival time.</p>
 
         <div class="hero-ctas">
           <a href="tel:5392923074" class="hero-btn-call">
@@ -3940,6 +3940,8 @@
             <span>Send my location</span>
           </a>
         </div>
+
+        <p class="hero-trust-line">Licensed DPS-53547-W &middot; English and Spanish &middot; Owner towing in Tulsa since 2010</p>
 
       </div>
     </div>
